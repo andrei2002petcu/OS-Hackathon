@@ -43,13 +43,12 @@ int connect_socket(int fd)
 ssize_t send_socket(int fd, const char *buf, size_t len)
 {
 	send(fd, buf, len, 0);
-    printf("message sent\n");
-	
 	return -1;
 }
 
 ssize_t recv_socket(int fd, char *buf, size_t len)
 {
+	read(fd, buf, len);
 	return -1;
 }
 
