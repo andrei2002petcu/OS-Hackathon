@@ -1,0 +1,24 @@
+###############################################################################
+###############################  HACKATHON SO #################################
+###############################################################################
+
+    Implementarea conexiunii server-client a fost realizata folosind UNIX
+sockets. Server-ul asculta intr-un loop infinit pe adresa IP de LOOPBACK,
+portul 5000 si preia cate o comanda pe rand (nu am reusit sa ajungem sa 
+implementam si paralelizarea). 
+    Redirectionarea output-ului unei comenzi exectutate este in fisierul 
+corespunzator a fost facuta folosind functia "freopen", care asociaza un file
+cu un stream specificat.
+    Noi am dezvoltat programul tinand cont de erorile ce pot fi cauzate de un
+input introdus incorect de utilizator, sau comportamente neasteptate la 
+realizarea conexiunii. Am adaugat de oricate ori am considerat necesar cate o 
+verificare pentru functiile apelate. Astfel, server-ul ruleaza fara intreruperi
+indiferent de erorile aparute.
+    La rularea comenzii ./checher.sh testul 4 esueaza. In fisierul de output nu
+apare nimic. Insa, in cazul in care se ruleaza testul individual, output-ul din
+fisier apare si este corect ("./checker.sh 4").
+
+###############################################################################
+Facultatea de Automatica si Calculatoare - Anul 2 2022-2023
+PETCU Andrei 322CC - IONESCU Valentin Stefan 322CC
+###############################################################################

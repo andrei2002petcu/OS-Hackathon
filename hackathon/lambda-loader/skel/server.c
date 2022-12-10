@@ -16,7 +16,6 @@
 #endif
 
 #define PORT 5000
-#define IP_ADDR "127.0.0.1"
 int arg_nr;
 
 static int lib_prehooks(struct lib *lib)
@@ -33,7 +32,7 @@ static int lib_load(struct lib *lib)
 			printf("Error: %s could not be executed.\n", lib->libname);
 		else
 			printf("Error: %s %s %s could not be executed.\n", lib->libname, lib->funcname, lib->filename);
-		exit(EXIT_FAILURE);
+		return -1;
 	}
 	return 0;
 }
@@ -44,7 +43,7 @@ static int lib_execute(struct lib *lib)
 	 	lib->run = dlsym(lib->handle, "run");
 		if(lib->run == NULL) {
 			printf("Error: %s could not be executed.\n", lib->libname);
-			exit(EXIT_FAILURE);
+			return -1;
 		}
 	  	lib->run();
 	}
@@ -53,7 +52,7 @@ static int lib_execute(struct lib *lib)
 		if(lib->p_run == NULL) {
 		 	fprintf(stderr, "%s\n", dlerror());
 			printf("Error: %s %s %s could not be executed.\n", lib->libname, lib->funcname, lib->filename);
-			exit(EXIT_FAILURE);
+			return -1;
 		}
 	 	lib->p_run(lib->filename);
 	}
@@ -62,7 +61,8 @@ static int lib_execute(struct lib *lib)
 
 static int lib_close(struct lib *lib)
 {
-	dlclose(lib->handle);
+	if(lib->handle != NULL)
+		dlclose(lib->handle);
 	return 0;
 }
 
@@ -156,9 +156,6 @@ int main(void)
 		memset(buffer, 0, BUFSIZE);
 		read(new_socket, buffer, BUFSIZE);
 		
-		if (strcmp(buffer, "exit") == 0 || strcmp(buffer, "quit") == 0)
-			break;
-		
 		/* TODO - parse message with parse_command and populate lib */
 		
 		lib.libname = (char *)calloc(BUFSIZE, sizeof(char));
@@ -169,6 +166,8 @@ int main(void)
 
 		FILE *fp;
 		fp = freopen(template, "w+", stdout);
+		setbuf(stdout, NULL);
+
 		ret = lib_run(&lib);
 
 		free(lib.libname);
